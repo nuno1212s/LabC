@@ -7,6 +7,14 @@
 #include <string>
 #include <set>
 
+enum UserRank {
+
+    ADMIN,
+    MOD,
+    USER
+
+};
+
 class User {
 
 private:
@@ -16,9 +24,11 @@ private:
 
     std::set<unsigned long> *subscribedTo, *createdPosts;
 
+    UserRank rank;
+
 public:
-    User(const unsigned long &userID, std::string userName, std::string password, std::string salt)
-            : userID(userID) {
+    User(const unsigned long &userID, std::string userName, std::string password, std::string salt, UserRank rank)
+            : userID(userID), rank(rank) {
         this->userName = std::move(userName);
         this->password = std::move(password);
         this->salt = std::move(salt);
@@ -27,8 +37,9 @@ public:
         this->createdPosts = new std::set<unsigned long>();
     }
 
-    User(const unsigned long &userID, std::string userName, std::string password, std::string salt, std::set<unsigned long>* subscribedTo, std::set<unsigned long>* createdPosts)
-            : userID(userID), subscribedTo(subscribedTo), createdPosts(createdPosts) {
+    User(const unsigned long &userID, std::string userName, std::string password, std::string salt, UserRank rank,
+         std::set<unsigned long>* subscribedTo, std::set<unsigned long>* createdPosts)
+            : userID(userID), subscribedTo(subscribedTo), createdPosts(createdPosts), rank(rank) {
         this->userName = std::move(userName);
         this->password = std::move(password);
         this->salt = std::move(salt);
@@ -65,13 +76,21 @@ public:
         return createdPosts;
     }
 
-    void registerCreatedPost(unsigned long &);
+    UserRank getRank() const {
+        return rank;
+    }
 
-    void deletePost(unsigned long &);
+    void setPassword(std::string password) {
+        this->password = std::move(password);
+    }
 
-    bool subscribeTo(unsigned long &);
+    void registerCreatedPost(unsigned long &postID);
 
-    bool unSubscribeTo(unsigned long &);
+    void deletePost(unsigned long &postID);
+
+    bool subscribeTo(unsigned long &postID);
+
+    bool unSubscribeTo(unsigned long &postID);
 
     std::string toJSON();
 

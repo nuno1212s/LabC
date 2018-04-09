@@ -120,8 +120,6 @@ void RestHandler::onRequest(const Pistache::Http::Request &request, Pistache::Ht
 
         } else if (request.query().has("createPost")) {
 
-            json j = json::parse(request.body());
-
             Post *post = Main::getPostManager()->createPost(j["PostTitle"], j["UserID"], j["ParentPost"]);
 
             if (post == nullptr) {
@@ -136,9 +134,27 @@ void RestHandler::onRequest(const Pistache::Http::Request &request, Pistache::Ht
 
         } else if (request.query().has("updatePost")) {
 
-            json j = json::parse(request.body());
+            std::string authKey = j["AuthKey"];
 
-            Main::getStorageManager()->updatePostText(j["PostID"], j["PostText"]);
+            const unsigned long userID = j["UserID"];
+
+            if (Main::getUserManager()->isAuthenticated(userID, authKey)) {
+
+                Main::getStorageManager()->updatePostText(j["PostID"], j["PostText"]);
+
+            }
+
+        } else if (request.query().has("deletePost")) {
+
+            std::string authKey = j["AuthKey"];
+
+            const unsigned long userID = j["UserID"];
+
+            if (Main::getUserManager()->isAuthenticated(userID, authKey)) {
+
+                Main::getStorageManager()->deletePost(j["PostID"]);
+
+            }
 
         }
     }

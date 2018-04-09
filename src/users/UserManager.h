@@ -16,6 +16,8 @@ private:
 
     std::unordered_map<unsigned long, User*> loadedUsers;
 
+    std::unordered_map<unsigned long, std::string> activeConnections;
+
 public:
     /**
      * Returns a 16 char random string
@@ -32,6 +34,10 @@ public:
     ~UserManager();
 
     User *getUser(const std::string &userName);
+
+    bool isAuthenticated(const unsigned long &userID, const std::string &accessKey);
+
+    void discardOfAccessKey(const unsigned long &userID);
 };
 
 

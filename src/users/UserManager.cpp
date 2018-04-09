@@ -40,7 +40,27 @@ std::string UserManager::generateSalt() {
 
 std::string UserManager::generateAccessKey(const unsigned long &userID) {
 
-    return random_string(64);
+    std::string accessKey = random_string(64);
+
+    this->activeConnections.emplace(userID, accessKey);
+
+    return accessKey;
+}
+
+bool UserManager::isAuthenticated(const unsigned long &userID, const std::string & accessKey) {
+
+    if (this->activeConnections.find(userID) != this->activeConnections.end()) {
+
+        return this->activeConnections[userID] == accessKey;
+
+    }
+
+    return false;
+}
+
+void UserManager::discardOfAccessKey(const unsigned long &userID) {
+
+    this->activeConnections.erase(userID);
 
 }
 
@@ -65,6 +85,10 @@ User *UserManager::getUser(const unsigned long &userID) {
     } else {
 
         User *user = Main::getStorageManager()->getUser(userID);
+
+        if (user == nullptr) {
+            return nullptr;
+        }
 
         this->loadedUsers[userID] = user;
 

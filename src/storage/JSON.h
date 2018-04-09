@@ -14,16 +14,20 @@ class JSON : public StorageManager {
 
 private:
 
-    std::string userFilePath, postsStoragePath;
+    std::string userFilePath, postsStoragePath, auxStoragePath;
 
     std::unordered_map<unsigned long, Post *> posts;
 
     std::unordered_map<unsigned long, User *> users;
 
-    JSON () : userFilePath("~/LabC/users.json"), postsStoragePath("~/LabC/posts.json") {
+    unsigned long currentPostID, currentUserID;
 
-    }
+    bool execute = true;
 
+    std::mutex postLock, userLock;
+
+
+private:
     void loadPosts();
 
     void savePosts();
@@ -32,11 +36,48 @@ private:
 
     void saveUsers();
 
-    unsigned long nextPostID();
+    void loadAux();
 
-    unsigned long prevPostID();
+    void saveAux();
+
+    unsigned long nextPostID() {
+
+        return this->currentPostID++;
+
+    };
+
+    unsigned long nextUserID() {
+
+        return this->currentUserID++;
+    };
 
 public:
+    JSON() : userFilePath("users.json"), postsStoragePath("posts.json"),
+             auxStoragePath("aux.json") {
+
+        system("mkdir ~/LabC/");
+
+        loadAux();
+
+        loadPosts();
+        loadUsers();
+
+        std::thread([this]() -> void {
+
+            while (execute) {
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+
+                std::cout << "Saving all data..." << std::endl;
+
+                this->savePosts();
+                this->saveUsers();
+                this->saveAux();
+            }
+
+        }).detach();
+
+    }
+
     std::vector<Post *> *getAllPosts() override;
 
     std::vector<Post *> *getAllPostsFor(const unsigned long &userID) override;
@@ -56,7 +97,7 @@ public:
 
     User *getUser(const unsigned long &i) override;
 
-    User *getUserByUsername(const std::string &string) override;
+    User *getUserByUsername(const std::string &userName) override;
 
     User *createUserWithUserName(const std::string &string, const std::string &string1) override;
 

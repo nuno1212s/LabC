@@ -11,7 +11,20 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91139976-144d-4b10-9690-ab90eab7d5e1" name="Default" comment="" />
+    <list default="true" id="91139976-144d-4b10-9690-ab90eab7d5e1" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/nlohmann/json.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/json/json.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rest/RestHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rest/RestHandler.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/JSON.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/JSON.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/JSON.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/JSON.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/storage/MySQL.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/storage/MySQL.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/User.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/User.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/UserManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/UserManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/UserManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/UserManager.h" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,32 +36,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PostManager.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/posts/PostManager.cpp">
+      <file leaf-file-name="StorageManager.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PostManager.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/posts/PostManager.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JSON.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/storage/JSON.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="91" column="4" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="4" />
-              <folding>
-                <element signature="e#41#58#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="440">
+              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
             </state>
           </provider>
         </entry>
@@ -56,8 +48,8 @@
       <file leaf-file-name="JSON.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/storage/JSON.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+            <state relative-caret-position="145">
+              <caret line="16" column="32" lean-forward="true" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
               <folding>
                 <element signature="e#83#110#0" expanded="true" />
               </folding>
@@ -65,20 +57,65 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MySQL.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/storage/MySQL.h">
+      <file leaf-file-name="JSON.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/storage/JSON.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="60" column="91" selection-start-line="60" selection-start-column="91" selection-end-line="60" selection-end-column="91" />
+            <state relative-caret-position="359">
+              <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
+              <folding>
+                <element signature="e#41#59#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Post.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/posts/Post.h">
+      <file leaf-file-name="User.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/users/User.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+            <state relative-caret-position="342">
+              <caret line="38" selection-start-line="38" selection-end-line="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MySQL.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/storage/MySQL.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4794">
+              <caret line="29" column="57" lean-forward="true" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+              <folding>
+                <element signature="e#41#80#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestHandler.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/rest/RestHandler.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="96" column="55" lean-forward="true" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserManager.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/users/UserManager.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-79">
+              <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
+              <folding>
+                <element signature="e#41#61#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserManager.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/users/UserManager.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="18" column="69" selection-start-line="18" selection-start-column="69" selection-end-line="18" selection-end-column="69" />
             </state>
           </provider>
         </entry>
@@ -87,39 +124,56 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>iterator</find>
       <find>U</find>
       <find>UNSIGNED BIGINT</find>
       <find>build(</find>
       <find>operator</find>
+      <find>set</find>
+      <find>unordered_set</find>
+      <find>std::set</find>
+      <find>unordered_se</find>
+      <find>#include &lt;set&gt;</find>
+      <find>#include &lt;unordered_set&gt;</find>
+      <find>iterator</find>
+      <find>loadUsers</find>
+      <find>savePosts</find>
     </findStrings>
     <replaceStrings>
       <replace />
       <replace>BIGINT UNSIGNED</replace>
+      <replace>std::unordered_se</replace>
+      <replace>std::unordered_set</replace>
+      <replace>#include &lt;set&gt;</replace>
+      <replace>j</replace>
+      <replace>userJSON</replace>
     </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/posts/PostBuilder.h" />
-        <option value="$PROJECT_DIR$/src/users/User.h" />
         <option value="$PROJECT_DIR$/src/users/User.cpp" />
         <option value="$PROJECT_DIR$/src/rest/RestHandler.h" />
         <option value="$PROJECT_DIR$/src/Main.h" />
-        <option value="$PROJECT_DIR$/src/Main.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/users/UserManager.h" />
         <option value="$PROJECT_DIR$/src/posts/PostManager.h" />
-        <option value="$PROJECT_DIR$/src/users/UserManager.cpp" />
         <option value="$PROJECT_DIR$/src/posts/Post.cpp" />
         <option value="$PROJECT_DIR$/src/storage/StorageManager.h" />
         <option value="$PROJECT_DIR$/src/posts/PostManager.cpp" />
-        <option value="$PROJECT_DIR$/src/rest/RestHandler.cpp" />
-        <option value="$PROJECT_DIR$/src/posts/Post.h" />
-        <option value="$PROJECT_DIR$/src/storage/MySQL.cpp" />
         <option value="$PROJECT_DIR$/src/storage/MySQL.h" />
+        <option value="$PROJECT_DIR$/src/posts/Post.h" />
+        <option value="$PROJECT_DIR$/src/Main.cpp" />
         <option value="$PROJECT_DIR$/src/storage/JSON.h" />
+        <option value="$PROJECT_DIR$/src/users/UserManager.h" />
+        <option value="$PROJECT_DIR$/src/rest/RestHandler.cpp" />
+        <option value="$PROJECT_DIR$/src/users/User.h" />
+        <option value="$PROJECT_DIR$/src/storage/MySQL.cpp" />
         <option value="$PROJECT_DIR$/src/storage/JSON.cpp" />
+        <option value="$PROJECT_DIR$/src/users/UserManager.cpp" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/users.json" />
       </list>
     </option>
   </component>
@@ -132,10 +186,11 @@
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="292" />
-    <option name="y" value="52" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
+    <option name="y" value="24" />
+    <option name="width" value="1398" />
+    <option name="height" value="992" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -152,7 +207,24 @@
             <path>
               <item name="LabC" type="b2602c69:ProjectViewProjectNode" />
               <item name="LabC" type="462c0819:PsiDirectoryNode" />
+              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LabC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LabC" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LabC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LabC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="rest" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LabC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LabC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="storage" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -161,19 +233,20 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="un&#9;FILE&#9;file:///usr/include/c++/5/bits/unordered_map.h&#10;res&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;MyS&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;Stora&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/StorageManager.h&#10;Post&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/PostManager.h&#10;My&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;stora&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/StorageManager.h&#10;u&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/User.h&#10;User&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.h&#10;MySQ&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;user&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.h&#10;MSQ&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;UserMana&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.cpp&#10;Main&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/Main.h&#10;RestHa&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;Re&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.h&#10;Mai&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/Main.cpp&#10;rest&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;U&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.cpp&#10;basic_json&#9;null&#9;null&#10;M&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;MySQL&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;Mys&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;S&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.cpp&#10;Rest&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;Post.cpp&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.cpp&#10;PostMa&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/PostManager.cpp" />
+    <property name="SearchEverywhereHistoryKey" value="J&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/JSON.cpp&#10;Mysql&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;User&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/User.h&#10;UserMa&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.cpp&#10;JSO&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/JSON.h&#10;json&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/JSON.cpp&#10;Post&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.h&#10;po&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.h&#10;my&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;U&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/User.h&#10;un&#9;FILE&#9;file:///usr/include/c++/5/bits/unordered_map.h&#10;res&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;MyS&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;Stora&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/StorageManager.h&#10;My&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;stora&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/StorageManager.h&#10;u&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/User.h&#10;MySQ&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;user&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.h&#10;MSQ&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;UserMana&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/users/UserManager.cpp&#10;Main&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/Main.h&#10;RestHa&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;Re&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.h&#10;Mai&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/Main.cpp&#10;rest&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;basic_json&#9;null&#9;null&#10;M&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.cpp&#10;MySQL&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;Mys&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/storage/MySQL.h&#10;S&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.cpp&#10;Rest&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/rest/RestHandler.cpp&#10;Post.cpp&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/Post.cpp&#10;PostMa&#9;FILE&#9;file:///home/nuno/CLionProjects/LabC/src/posts/PostManager.cpp" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/include" />
-      <recent name="$PROJECT_DIR$/lib/lib" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/include" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/include" />
+      <recent name="$PROJECT_DIR$/lib/lib" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -212,35 +285,43 @@
       <workItem from="1522607129060" duration="117000" />
       <workItem from="1522607255237" duration="14690000" />
       <workItem from="1523133250632" duration="28000" />
-      <workItem from="1523133288058" duration="3453000" />
+      <workItem from="1523133288058" duration="19888000" />
     </task>
+    <task id="LOCAL-00001" summary="Deleted cmake files">
+      <created>1523196346570</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1523196346570</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71165000" />
+    <option name="totallyTimeSpent" value="87600000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.12827511" />
       <window_info anchor="bottom" id="TODO" order="11" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.32984293" />
+      <window_info anchor="bottom" id="Messages" order="0" weight="0.32948583" />
       <window_info anchor="bottom" id="CMake" order="1" weight="0.32879582" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="3" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.32984293" />
+      <window_info anchor="bottom" id="Find" order="6" weight="0.32948583" />
+      <window_info anchor="bottom" id="Version Control" order="3" />
+      <window_info anchor="bottom" id="Run" order="7" weight="0.32948583" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="4" weight="0.32879582" />
+      <window_info anchor="bottom" id="Terminal" order="4" weight="0.32948583" />
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="8" visible="true" weight="0.39895287" />
+      <window_info anchor="bottom" id="Debug" order="8" weight="0.39874083" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="6" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -269,9 +350,13 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Deleted cmake files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted cmake files" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -284,69 +369,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/rest/RestHandler.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="38" column="47" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/posts/PostManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="25" column="95" selection-start-line="25" selection-start-column="94" selection-end-line="25" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/UserManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/UserManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1098">
-          <caret line="61" column="5" lean-forward="true" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/User.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rest/RestHandler.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="38" column="47" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/posts/PostManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="25" column="95" selection-start-line="25" selection-start-column="94" selection-end-line="25" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/users/UserManager.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -497,38 +519,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/User.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="48" column="24" lean-forward="true" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
           <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/UserManager.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="33" column="47" selection-start-line="33" selection-start-column="47" selection-end-line="33" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/UserManager.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1242">
-          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -546,34 +540,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rest/RestHandler.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="141" selection-start-line="141" selection-end-line="141" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/MySQL.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-936">
-          <caret line="173" column="5" selection-start-line="173" selection-start-column="5" selection-end-line="173" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/User.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="71" column="34" selection-start-line="71" selection-start-column="34" selection-end-line="71" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/MySQL.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="60" column="91" selection-start-line="60" selection-start-column="91" selection-end-line="60" selection-end-column="91" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/posts/PostManager.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -588,20 +554,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/JSON.h">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+        <state relative-caret-position="180">
+          <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/json/json.hpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/users/User.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="58" column="29" lean-forward="true" selection-start-line="58" selection-start-column="29" selection-end-line="58" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/5/bits/stl_iterator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="424" column="68" lean-forward="true" selection-start-line="424" selection-start-column="68" selection-end-line="424" selection-end-column="68" />
           <folding>
-            <element signature="e#83#110#0" expanded="true" />
+            <element signature="e#15494#15515#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.h">
+    <entry file="file:///usr/local/include/nlohmann/detail/conversions/to_json.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        <state relative-caret-position="267">
+          <caret line="327" selection-start-line="327" selection-end-line="327" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/5/chrono">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="532" column="44" selection-start-line="532" selection-start-column="44" selection-end-line="532" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/posts/Post.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="e#54#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#41#58#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -612,20 +622,102 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/posts/Post.h">
+    <entry file="file://$PROJECT_DIR$/src/users/UserManager.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+        <state relative-caret-position="240">
+          <caret line="18" column="69" selection-start-line="18" selection-start-column="69" selection-end-line="18" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/MySQL.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4794">
+          <caret line="29" column="57" lean-forward="true" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+          <folding>
+            <element signature="e#41#80#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/StorageManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/MySQL.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/storage/JSON.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="16" column="32" lean-forward="true" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
+          <folding>
+            <element signature="e#83#110#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/include/nlohmann/detail/conversions/from_json.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="65" column="41" lean-forward="true" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/storage/JSON.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="91" column="4" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="4" />
+        <state relative-caret-position="359">
+          <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
           <folding>
-            <element signature="e#41#58#0" expanded="true" />
+            <element signature="e#41#59#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/users/User.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="38" selection-start-line="38" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/users.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="3" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/posts.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///usr/local/include/nlohmann/detail/input/parser.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="570" selection-start-line="570" selection-end-line="570" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/users/UserManager.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-79">
+          <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
+          <folding>
+            <element signature="e#41#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rest/RestHandler.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="96" column="55" lean-forward="true" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
         </state>
       </provider>
     </entry>

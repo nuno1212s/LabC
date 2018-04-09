@@ -6,6 +6,7 @@
 #include "nlohmann/json.hpp"
 #include "../users/User.h"
 #include <list>
+#include <set>
 #include "MySQL.h"
 #include "../Main.h"
 
@@ -27,7 +28,8 @@ void MySQL::createTables() {
     std::string table1 = "CREATE TABLE IF NOT EXISTS users(USERID BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT"
             ", USERNAME varchar(25) NOT NULL DEFAULT ''"
             ", PASSWORD char(64) NOT NULL, SALT char(16) NOT NULL"
-            ", SUBSCRIBEDTO TEXT, CREATEDPOSTS TEXT, UNIQUE(USERNAME))";
+            ", SUBSCRIBEDTO TEXT, CREATEDPOSTS TEXT"
+            ", RANK TINYINT UNSIGNED DEFAULT 1, UNIQUE(USERNAME))";
 
     s->execute(table1);
 
@@ -151,7 +153,8 @@ void MySQL::saveUser(User *user) {
     checkCon();
 
     PreparedStatement *s = con->prepareStatement(
-            "INSERT INTO users(USERNAME, PASSWORD, SALT, SUBSCRIBEDTO, CREATEDPOSTS) values(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE SUBSCRIBEDTO=? CREATEDPOSTS=?");
+            "INSERT INTO users(USERNAME, PASSWORD, SALT, SUBSCRIBEDTO, CREATEDPOSTS, RANK) values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE "
+            "SUBSCRIBEDTO=?, CREATEDPOSTS=?, RANK=?");
 
     s->setString(1, user->getUserName());
 
@@ -179,9 +182,13 @@ void MySQL::saveUser(User *user) {
 
     s->setString(5, created);
 
-    s->setString(6, subscribed);
+    s->setUInt(6, user->getRank());
 
     s->setString(7, subscribed);
+
+    s->setString(8, subscribed);
+
+    s->setUInt(9, user->getRank());
 
     s->executeUpdate();
 
@@ -279,7 +286,7 @@ User *MySQL::createUserWithUserName(const std::string &userName, const std::stri
 
     delete s;
 
-    return new User(getLastID(con), userName, "", salt);
+    return new User(getLastID(con), userName, "", salt, UserRank::USER);
 }
 
 User* MySQL::instantiateUserFromResultSet(ResultSet *set) {
@@ -294,6 +301,8 @@ User* MySQL::instantiateUserFromResultSet(ResultSet *set) {
     json subscribed = json::parse(std::string(set->getString("SUBSCRIBEDTO"))),
             created = json::parse(std::string(set->getString("CREATEDPOSTS")));
 
+    unsigned long rank = set->getUInt("RANK");
+
     auto subscribedPosts = new std::set<unsigned long>(), createdPosts = new std::set<unsigned long>();
 
     for (unsigned long subscribedPost : subscribed) {
@@ -304,7 +313,7 @@ User* MySQL::instantiateUserFromResultSet(ResultSet *set) {
         createdPosts->insert(createdPost);
     }
 
-    return new User(userID, userName, password, salt, subscribedPosts, createdPosts);
+    return new User(userID, userName, password, salt, static_cast<UserRank>(rank), subscribedPosts, createdPosts);
 
 }
 

@@ -9,10 +9,11 @@
 #include "rest/RestHandler.h"
 #include "Main.h"
 #include "storage/MySQL.h"
+#include "storage/JSON.h"
 
 int main() {
 
-    Main::instantiateStorage<MySQL>();
+    Main::instantiateStorage<JSON>();
 
     std::shared_ptr<RestHandler> pointer = std::make_shared<RestHandler>();
 
