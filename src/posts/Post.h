@@ -24,7 +24,7 @@ private:
 
 public:
     Post(const unsigned long &parentPost, const unsigned long &postingUser, const unsigned long &postID,
-         std::string postTitle, std::string postText)
+         std::string postTitle, std::string postText = "")
             : parentPost(parentPost), postingUser(postingUser), postID(postID) {
 
         this->subscribers = new std::set<unsigned long>();
@@ -87,9 +87,7 @@ public:
         return postText;
     }
 
-    void setPostText(std::string postText) {
-        this->postText = std::move(postText);
-    }
+    void setPostText(std::string postText);
 
     std::set<unsigned long> *getSubscribers() const {
         return subscribers;
@@ -182,7 +180,7 @@ public:
             }
         }
 
-        posts->remove_if([this](PostBuilder*& post) -> bool {
+        posts->remove_if([this](PostBuilder* post) -> bool {
             return post->getPostID() == this->getPostID() || this->getSubPosts()->find(post->getPostID()) != this->subPostsTemp->end();
         });
 

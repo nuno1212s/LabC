@@ -10,6 +10,7 @@
 #include "Main.h"
 #include "storage/MySQL.h"
 #include "storage/JSON.h"
+#include "commandhandler/CommandHandler.h"
 
 int main() {
 
@@ -21,9 +22,7 @@ int main() {
 
     restThread.detach();
 
-    std::cout << "Hello" << std::endl;
-
-    std::cin.get();
+    initialMenu();
 }
 
 PostManager *Main::postManager = nullptr;

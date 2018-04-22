@@ -89,7 +89,7 @@ std::string Post::toJSON() const {
 
     std::for_each(this->subPosts->begin(), this->subPosts->end(), [&posts](const Post *p) -> void {
 
-        posts.push_back(p->toJSON());
+        posts.push_back(p->getPostID());
 
     });
 
@@ -97,4 +97,11 @@ std::string Post::toJSON() const {
     j["SubPosts"] = posts;
 
     return j.dump(4);
+}
+
+void Post::setPostText(std::string postText) {
+
+    Main::getStorageManager()->updatePostText(getPostID(), postText);
+
+    this->postText = std::move(postText);
 }

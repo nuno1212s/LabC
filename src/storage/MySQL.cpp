@@ -84,7 +84,30 @@ std::vector<Post *> *MySQL::getAllPosts() {
 std::vector<Post *> *MySQL::getAllPostsFor(const unsigned long &userID) {
     checkCon();
 
+}
 
+std::vector<Post *> *MySQL::getAllPostsWithParent(const unsigned long &parentID) {
+
+    checkCon();
+
+    PreparedStatement *s = con->prepareStatement("SELECT * FROM posts WHERE PARENT=?");
+
+    s->setUInt64(1, parentID);
+
+    ResultSet *set = s->executeQuery();
+
+    std::vector<Post*>* posts = new std::vector<Post*>();
+
+    std::list<PostBuilder*> disposable(0);
+
+    while (set->next()) {
+
+    }
+
+    //TODO: load the posts
+
+    delete set;
+    delete s;
 }
 
 Post *MySQL::getPostWithID(const unsigned long &postID) {
@@ -191,6 +214,20 @@ void MySQL::saveUser(User *user) {
     s->setUInt(9, user->getRank());
 
     s->executeUpdate();
+
+    delete s;
+
+}
+
+void MySQL::deleteUser(const unsigned long &userID) {
+
+    checkCon();
+
+    PreparedStatement *s = con->prepareStatement("DELETE FROM users WHERE USERID=?");
+
+    s->setUInt64(1, userID);
+
+    s->execute();
 
     delete s;
 

@@ -9,9 +9,10 @@
 
 enum UserRank {
 
-    ADMIN,
-    MOD,
-    USER
+    ADMIN = 0,
+    MOD = 1,
+    USER = 2,
+    PENDING = 3
 
 };
 
@@ -78,6 +79,10 @@ public:
 
     UserRank getRank() const {
         return rank;
+    }
+
+    void setRank(UserRank rank) {
+        this->rank = rank;
     }
 
     void setPassword(std::string password) {

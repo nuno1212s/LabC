@@ -4,11 +4,11 @@
 
 #include <fstream>
 #include <set>
-#include <nlohmann/json.hpp>
 #include <thread>
 #include <mutex>
 #include "JSON.h"
 #include <fstream>
+#include "nlohmann/json.hpp"
 
 #include "../users/User.h"
 #include "../posts/Post.h"
@@ -31,6 +31,21 @@ std::vector<Post *> *JSON::getAllPostsFor(const unsigned long &userID) {
     return getAllPosts();
 }
 
+std::vector<Post *> *JSON::getAllPostsWithParent(const unsigned long &parentID) {
+
+    std::vector<Post *> *posts = new std::vector<Post *>();
+
+    for (auto post = this->posts.begin(); post != this->posts.end(); post++) {
+
+        if (post->second->getParentPost() == parentID) {
+            posts->push_back(post->second);
+        }
+
+    }
+
+    return posts;
+}
+
 Post *JSON::getPostWithID(const unsigned long &postID) {
     return this->posts[postID];
 }
@@ -46,14 +61,6 @@ Post *JSON::createPostWithTitle(const std::string &postTitle, const unsigned lon
 }
 
 void JSON::updatePostText(const unsigned long &postID, const std::string &postText) {
-
-    Post *post = getPostWithID(postID);
-
-    if (post == nullptr) {
-        return;
-    }
-
-    post->setPostText(postText);
 
 }
 
@@ -84,6 +91,12 @@ Post *JSON::getPostWithTitle(const std::string &postTitle) {
 void JSON::saveUser(User *user) {
 
     this->users.emplace(user->getUserID(), user);
+
+}
+
+void JSON::deleteUser(const unsigned long &userID) {
+
+    this->users.erase(userID);
 
 }
 
@@ -301,6 +314,7 @@ nlohmann::json savePost(Post *post) {
     postJSON["ParentPost"] = post->getParentPost();
     postJSON["PostingUser"] = post->getPostingUser();
     postJSON["PostTitle"] = post->getPostTitle();
+    postJSON["PostText"] = post->getPostText();
 
     nlohmann::json subPosts = nlohmann::json::array(),
             subscribers = nlohmann::json::array();

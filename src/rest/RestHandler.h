@@ -6,7 +6,8 @@
 #define LABC_RESTHANDLER_H
 
 #include <memory>
-#include "pistache/endpoint.h"
+#include <http.h>
+#include <endpoint.h>
 
 class RestHandler : public Pistache::Http::Handler, public std::enable_shared_from_this<RestHandler> {
 

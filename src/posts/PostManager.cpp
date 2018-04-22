@@ -28,6 +28,23 @@ Post *PostManager::createPost(const std::string &postTitle, const unsigned long 
     return Main::getStorageManager()->createPostWithTitle(postTitle, parentPost, creatingUser);
 };
 
+Post* PostManager::getPostWithTitle(const std::string &title) {
+
+    return Main::getStorageManager()->getPostWithTitle(title);
+}
+
+void PostManager::deletePost(const unsigned long &postID) {
+
+    Main::getStorageManager()->deletePost(postID);
+
+}
+
+std::vector<Post *> * PostManager::getTopics() {
+
+    return Main::getStorageManager()->getAllPostsWithParent(0);
+
+}
+
 std::vector<Post *> * PostManager::loadFeedForUser(const unsigned long &userID) {
 
     return Main::getStorageManager()->getAllPosts();

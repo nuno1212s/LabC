@@ -22,7 +22,7 @@ void RestHandler::onRequest(const Pistache::Http::Request &request, Pistache::Ht
 
         if (query.has("userName")) {
 
-            User *user = Main::getUserManager()->getUser(query.get("UserName").getOrElse(""));
+            User *user = Main::getUserManager()->getUser(query.get("userName").getOrElse(""));
 
             if (user == nullptr) {
                 response.send(Http::Code::Not_Found);
@@ -120,16 +120,25 @@ void RestHandler::onRequest(const Pistache::Http::Request &request, Pistache::Ht
 
         } else if (request.query().has("createPost")) {
 
-            Post *post = Main::getPostManager()->createPost(j["PostTitle"], j["UserID"], j["ParentPost"]);
+            std::string authKey = j["AuthKey"];
 
-            if (post == nullptr) {
+            const unsigned long userID = j["UserID"];
 
-                response.send(Http::Code::Bad_Request, "A post with that title already exists");
+            if (Main::getUserManager()->isAuthenticated(userID, authKey)) {
 
+                Post *post = Main::getPostManager()->createPost(j["PostTitle"], userID, j["ParentPost"]);
+
+                if (post == nullptr) {
+
+                    response.send(Http::Code::Bad_Request, "A post with that title already exists");
+
+                } else {
+
+                    response.send(Http::Code::Ok, "Post created");
+
+                }
             } else {
-
-                response.send(Http::Code::Ok, "Post created");
-
+                response.send(Http::Code::Bad_Request, "Auth key not valid");
             }
 
         } else if (request.query().has("updatePost")) {

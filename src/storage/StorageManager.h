@@ -21,6 +21,8 @@ public:
 
     virtual std::vector<Post *> *getAllPostsFor(const unsigned long &userID) = 0;
 
+    virtual std::vector<Post *> *getAllPostsWithParent(const unsigned long &postID) = 0;
+
     virtual Post *getPostWithID(const unsigned long &postID) = 0;
 
     virtual Post *createPostWithTitle(const std::string &postTitle, const unsigned long &parentPost, const unsigned long &postingUser) = 0;
@@ -32,6 +34,8 @@ public:
     virtual Post *getPostWithTitle(const std::string &postTitle) = 0;
 
     virtual void saveUser(User *) = 0;
+
+    virtual void deleteUser(const unsigned long &userID) = 0;
 
     virtual User *getUser(const unsigned long &) = 0;
 

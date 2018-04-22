@@ -29,6 +29,10 @@ public:
 
     User* getUser(const unsigned long&);
 
+    std::vector<User*> *getPendingUsers();
+
+    void deleteUser(const unsigned long&);
+
     std::string generateAccessKey(const unsigned long&);
 
     ~UserManager();

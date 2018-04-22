@@ -2,6 +2,7 @@
 // Created by nuno on 30-03-2018.
 //
 
+#include <iostream>
 #include "User.h"
 
 #include "nlohmann/json.hpp"

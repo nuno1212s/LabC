@@ -11,8 +11,8 @@
 
 const char charset[] =
         "0123456789"
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                "abcdefghijklmnopqrstuvwxyz";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
 const size_t max_index = (sizeof(charset) - 1);
 
 
@@ -47,7 +47,7 @@ std::string UserManager::generateAccessKey(const unsigned long &userID) {
     return accessKey;
 }
 
-bool UserManager::isAuthenticated(const unsigned long &userID, const std::string & accessKey) {
+bool UserManager::isAuthenticated(const unsigned long &userID, const std::string &accessKey) {
 
     if (this->activeConnections.find(userID) != this->activeConnections.end()) {
 
@@ -119,5 +119,26 @@ UserManager::~UserManager() {
         delete it->second;
 
     }
+
+}
+
+std::vector<User *> *UserManager::getPendingUsers() {
+
+    std::vector<User *> *users = new std::vector<User *>();
+
+    for (auto user = this->loadedUsers.begin(); user != this->loadedUsers.end(); user++) {
+
+        if (user->second->getUserRank() == UserRank::PENDING) {
+            users->push_back(user->second);
+        }
+
+    }
+
+    return users;
+}
+
+void UserManager::deleteUser(const unsigned long &userID) {
+
+    Main::getStorageManager()->deleteUser(userID);
 
 }

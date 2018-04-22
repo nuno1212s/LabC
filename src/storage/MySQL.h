@@ -54,6 +54,8 @@ public:
 
     std::vector<Post *> *getAllPostsFor(const unsigned long &userID) override;
 
+    std::vector<Post *> *getAllPostsWithParent(const unsigned long &parentID) override;
+
     Post *getPostWithID(const unsigned long &postID) override;
 
     Post *createPostWithTitle(const std::string &postTitle, const unsigned long&, const unsigned long&) override;
@@ -65,6 +67,8 @@ public:
     Post *getPostWithTitle(const std::string &postTitle) override;
 
     void saveUser(User *user) override;
+
+    void deleteUser(const unsigned long &userID) override;
 
     User *getUser(const unsigned long &userID) override;
 

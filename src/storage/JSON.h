@@ -27,7 +27,7 @@ private:
     std::mutex postLock, userLock;
 
 
-private:
+
     void loadPosts();
 
     void savePosts();
@@ -55,8 +55,6 @@ public:
     JSON() : userFilePath("users.json"), postsStoragePath("posts.json"),
              auxStoragePath("aux.json") {
 
-        system("mkdir ~/LabC/");
-
         loadAux();
 
         loadPosts();
@@ -65,9 +63,9 @@ public:
         std::thread([this]() -> void {
 
             while (execute) {
-                std::this_thread::sleep_for(std::chrono::seconds(2));
+                std::this_thread::sleep_for(std::chrono::seconds(20));
 
-                std::cout << "Saving all data..." << std::endl;
+                //std::cout << "Saving all data..." << std::endl;
 
                 this->savePosts();
                 this->saveUsers();
@@ -82,6 +80,8 @@ public:
 
     std::vector<Post *> *getAllPostsFor(const unsigned long &userID) override;
 
+    std::vector<Post *> *getAllPostsWithParent(const unsigned long &parentID) override;
+
     Post *getPostWithID(const unsigned long &postID) override;
 
     Post *createPostWithTitle(const std::string &postTitle, const unsigned long &parentPost,
@@ -94,6 +94,8 @@ public:
     Post *getPostWithTitle(const std::string &postTitle) override;
 
     void saveUser(User *user) override;
+
+    void deleteUser(const unsigned long &userID) override;
 
     User *getUser(const unsigned long &i) override;
 
