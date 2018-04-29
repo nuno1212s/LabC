@@ -124,7 +124,7 @@ User *JSON::getUserByUsername(const std::string &userName) {
 
 User *JSON::createUserWithUserName(const std::string &userName, const std::string &salt) {
 
-    User *user = new User(nextUserID(), userName, "", salt, UserRank::USER);
+    User *user = new User(nextUserID(), userName, "", "", salt, UserRank::PENDING);
 
     this->users.emplace(user->getUserID(), user);
 
@@ -154,7 +154,6 @@ void JSON::loadUsers() {
     json j;
 
     fileStream >> j;
-
     this->users.reserve(j.size());
 
     userLock.lock();
@@ -163,9 +162,9 @@ void JSON::loadUsers() {
 
         json userJSON = *iterator;
 
-        unsigned long userID = userJSON["UserID"];
+        unsigned long userID = userJSON["UserID"], creationDate = userJSON["CreationDate"];
 
-        std::string userName = userJSON["UserName"], password = userJSON["Password"], salt = userJSON["Salt"];
+        std::string userName = userJSON["UserName"], password = userJSON["Password"], salt = userJSON["Salt"], contact = userJSON["ContactInfo"], name = userJSON["Name"];
 
         json sPosts = userJSON["SubscribedTo"], cPosts = userJSON["CreatedPosts"];
 
@@ -182,7 +181,7 @@ void JSON::loadUsers() {
 
         unsigned int rank = userJSON["Rank"];
 
-        User *user = new User(userID, userName, password, salt, static_cast<UserRank>(rank), subscribed, createdPosts);
+        User *user = new User(userID, userName, password, name, salt, static_cast<UserRank>(rank), subscribed, createdPosts, contact, creationDate);
 
         this->users.emplace(user->getUserID(), user);
     }
@@ -225,6 +224,9 @@ void JSON::saveUsers() {
         userJSON["Rank"] = user->getRank();
         userJSON["SubscribedTo"] = subscribedTo;
         userJSON["CreatedPosts"] = createdPosts;
+        userJSON["ContactInfo"] = user->getContactInfo();
+        userJSON["CreationDate"] = user->getCreationDate();
+        userJSON["Name"] = user->getName();
 
         j.push_back(userJSON);
     }
@@ -315,6 +317,7 @@ nlohmann::json savePost(Post *post) {
     postJSON["PostingUser"] = post->getPostingUser();
     postJSON["PostTitle"] = post->getPostTitle();
     postJSON["PostText"] = post->getPostText();
+    postJSON["PostDate"] = post->getPostDate();
 
     nlohmann::json subPosts = nlohmann::json::array(),
             subscribers = nlohmann::json::array();
@@ -339,13 +342,13 @@ nlohmann::json savePost(Post *post) {
 
 Post *loadPost(nlohmann::json j) {
 
-    unsigned long postID = j["PostID"], parentPost = j["ParentPost"], postingUser = j["PostingUser"];
+    unsigned long postID = j["PostID"], parentPost = j["ParentPost"], postingUser = j["PostingUser"], postDate = j["PostDate"];
 
     std::string postTitle = j["PostTitle"], postText = j["PostText"];
 
-    Post *p = new Post(parentPost, postingUser, postID, postTitle, postText);
-
     nlohmann::json subPost = j["SubPosts"], subscribers = j["Subscribers"];
+
+    Post *p = new Post(parentPost, postingUser, postID, postDate, postTitle, postText, new std::set<unsigned long>(), new std::vector<Post*>(subPost.size()));
 
     for (auto post = subPost.begin(); post != subPost.end(); post++) {
 
@@ -407,4 +410,21 @@ void JSON::saveAux() {
     fileStream.flush();
     fileStream.close();
 
+}
+
+std::vector<User *> *JSON::getUsersWithRank(int rank) {
+
+    std::vector<User*>* users = new std::vector<User*>();
+
+    for (auto user = this->users.begin(); user != this->users.end(); user++) {
+
+        if (user->second->getRank() == rank) {
+
+            users->push_back(user->second);
+
+        }
+
+    }
+
+    return users;
 }

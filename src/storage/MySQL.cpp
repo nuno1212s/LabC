@@ -26,17 +26,17 @@ void MySQL::createTables() {
     Statement *s = con->createStatement();
 
     std::string table1 = "CREATE TABLE IF NOT EXISTS users(USERID BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT"
-            ", USERNAME varchar(25) NOT NULL DEFAULT ''"
-            ", PASSWORD char(64) NOT NULL, SALT char(16) NOT NULL"
-            ", SUBSCRIBEDTO TEXT, CREATEDPOSTS TEXT"
-            ", RANK TINYINT UNSIGNED DEFAULT 1, UNIQUE(USERNAME))";
+                         ", USERNAME varchar(25) NOT NULL DEFAULT ''"
+                         ", PASSWORD char(64) NOT NULL, SALT char(16) NOT NULL"
+                         ", SUBSCRIBEDTO TEXT, CREATEDPOSTS TEXT"
+                         ", RANK TINYINT UNSIGNED DEFAULT 1, UNIQUE(USERNAME))";
 
     s->execute(table1);
 
     std::string table2 = "CREATE TABLE IF NOT EXISTS posts(POSTID BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT"
-            ", PARENT BIGINT UNSIGNED DEFAULT 0, POSTINGUSER BIGINT UNSIGNED"
-            ", POSTTITLE varchar(500) NOT NULL DEFAULT '', POSTTEXT TEXT NOT NULL DEFAULT ''"
-            ", SUBSCRIBEDUSERS TEXT NOT NULL DEFAULT '', SUBPOSTS TEXT NOT NULL DEFAULT '')";
+                         ", PARENT BIGINT UNSIGNED DEFAULT 0, POSTINGUSER BIGINT UNSIGNED"
+                         ", POSTTITLE varchar(500) NOT NULL DEFAULT '', POSTTEXT TEXT NOT NULL DEFAULT ''"
+                         ", SUBSCRIBEDUSERS TEXT NOT NULL DEFAULT '', SUBPOSTS TEXT NOT NULL DEFAULT '')";
 
     s->execute(table2);
 
@@ -96,9 +96,9 @@ std::vector<Post *> *MySQL::getAllPostsWithParent(const unsigned long &parentID)
 
     ResultSet *set = s->executeQuery();
 
-    std::vector<Post*>* posts = new std::vector<Post*>();
+    std::vector<Post *> *posts = new std::vector<Post *>();
 
-    std::list<PostBuilder*> disposable(0);
+    std::list<PostBuilder *> disposable(0);
 
     while (set->next()) {
 
@@ -141,20 +141,21 @@ Post *MySQL::createPostWithTitle(const std::string &postTitle, const unsigned lo
     checkCon();
 
     PreparedStatement *s = con->prepareStatement(
-            "INSERT INTO posts(PARENT, POSTINGUSER, POSTTITLE, POSTTEXT, SUBSCRIBEDUSERS, SUBPOSTS) values(?, ?, ?, ?, ?, ?)");
+            "INSERT INTO posts(PARENT, POSTINGUSER, POSTDATE, POSTTITLE, POSTTEXT, SUBSCRIBEDUSERS, SUBPOSTS) values(?, ?, ?, ?, ?, ?, ?)");
 
     s->setUInt64(1, parentPost);
     s->setUInt64(2, postingUser);
-    s->setString(3, postTitle);
-    s->setString(4, "");
-    s->setString(5, json::array().dump());
+    s->setUInt64(3, (unsigned long) time(nullptr));
+    s->setString(4, postTitle);
+    s->setString(5, "");
     s->setString(6, json::array().dump());
+    s->setString(7, json::array().dump());
 
     s->executeUpdate();
 
     delete s;
 
-    return new Post(parentPost, postingUser, getLastID(con), postTitle, "", new std::set<unsigned long>(),
+    return new Post(parentPost, postingUser, getLastID(con), (unsigned long) time(nullptr), postTitle, "", new std::set<unsigned long>(),
                     new std::vector<Post *>());
 }
 
@@ -198,6 +199,8 @@ void MySQL::saveUser(User *user) {
     for (unsigned long createdPost : *createdPosts) {
         createdJSON.push_back(createdPost);
     }
+
+    //TODO: Save the contact info and the creation date
 
     auto subscribed = subscribedJSON.dump(), created = createdJSON.dump();
 
@@ -289,11 +292,11 @@ Post *MySQL::getPostWithTitle(const std::string &postTitle) {
 
     ResultSet *set = s->executeQuery();
 
-    Post* post = nullptr;
+    Post *post = nullptr;
 
     if (set->next()) {
 
-        std::list<PostBuilder*> posts;
+        std::list<PostBuilder *> posts;
 
         PostBuilder *postBuilder = instantiateFromResultSet(set);
 
@@ -313,7 +316,8 @@ User *MySQL::createUserWithUserName(const std::string &userName, const std::stri
 
     checkCon();
 
-    PreparedStatement *s = con->prepareStatement("INSERT INTO users(USERNAME, PASSWORD, SALT, SUBSCRIBEDTO, CREATEDPOSTS) values(?, '', ?, '[]', '[]')");
+    PreparedStatement *s = con->prepareStatement(
+            "INSERT INTO users(USERNAME, PASSWORD, SALT, SUBSCRIBEDTO, CREATEDPOSTS) values(?, '', ?, '[]', '[]')");
 
     s->setString(1, userName);
 
@@ -323,22 +327,25 @@ User *MySQL::createUserWithUserName(const std::string &userName, const std::stri
 
     delete s;
 
-    return new User(getLastID(con), userName, "", salt, UserRank::USER);
+    return new User(getLastID(con), userName, "",  "", salt, UserRank::USER);
 }
 
-User* MySQL::instantiateUserFromResultSet(ResultSet *set) {
+User *MySQL::instantiateUserFromResultSet(ResultSet *set) {
 
 
     unsigned long userID = set->getUInt64("USERID");
 
     std::string userName = set->getString("USERNAME"),
             password = set->getString("PASSWORD"),
-            salt = set->getString("SALT");
+            salt = set->getString("SALT"),
+            contact = set->getString("CONTACT"),
+            name = set->getString("NAME");
 
     json subscribed = json::parse(std::string(set->getString("SUBSCRIBEDTO"))),
             created = json::parse(std::string(set->getString("CREATEDPOSTS")));
 
     unsigned long rank = set->getUInt("RANK");
+    unsigned long creationDate = set->getUInt64("CREATIONDATE");
 
     auto subscribedPosts = new std::set<unsigned long>(), createdPosts = new std::set<unsigned long>();
 
@@ -350,7 +357,7 @@ User* MySQL::instantiateUserFromResultSet(ResultSet *set) {
         createdPosts->insert(createdPost);
     }
 
-    return new User(userID, userName, password, salt, static_cast<UserRank>(rank), subscribedPosts, createdPosts);
+    return new User(userID, userName, password, name, salt, static_cast<UserRank>(rank), subscribedPosts, createdPosts, contact, creationDate);
 
 }
 
@@ -358,7 +365,8 @@ PostBuilder *MySQL::instantiateFromResultSet(ResultSet *set) {
 
     unsigned long parentPost = set->getUInt64("PARENT"),
             postID = set->getUInt64("POSTID"),
-            postingUser = set->getUInt64("POSTINGUSER");
+            postingUser = set->getUInt64("POSTINGUSER"),
+            postDate = set->getUInt64("POSTDATE");
 
     std::string postTitle = set->getString("POSTTITLE"), postText = set->getString("POSTTEXT");
 
@@ -387,7 +395,7 @@ PostBuilder *MySQL::instantiateFromResultSet(ResultSet *set) {
 
     }
 
-    PostBuilder *post = new PostBuilder(parentPost, postingUser, postID, postTitle, postText, subscribedUsers,
+    PostBuilder *post = new PostBuilder(parentPost, postingUser, postID, postDate, postTitle, postText, subscribedUsers,
                                         subPosts);
 
     return post;

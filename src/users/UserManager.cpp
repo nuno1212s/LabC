@@ -70,7 +70,7 @@ User *UserManager::createUserWithUsername(const std::string &userName) {
 
     if ((user = getUser(userName)) != nullptr) {
 
-        return user;
+        return nullptr;
 
     }
 
@@ -124,17 +124,8 @@ UserManager::~UserManager() {
 
 std::vector<User *> *UserManager::getPendingUsers() {
 
-    std::vector<User *> *users = new std::vector<User *>();
+    return Main::getStorageManager()->getUsersWithRank(UserRank::PENDING);
 
-    for (auto user = this->loadedUsers.begin(); user != this->loadedUsers.end(); user++) {
-
-        if (user->second->getUserRank() == UserRank::PENDING) {
-            users->push_back(user->second);
-        }
-
-    }
-
-    return users;
 }
 
 void UserManager::deleteUser(const unsigned long &userID) {

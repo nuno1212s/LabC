@@ -53,6 +53,9 @@ std::string User::toJSON() {
 
     jsonUser["UserID"] = this->userID;
     jsonUser["UserName"] = this->userName;
+    jsonUser["Name"] = this->name;
+    jsonUser["Contact"] = this->contactInfo;
+    jsonUser["CreationDate"] = this->creationDate;
 
     json j = json::array();
 

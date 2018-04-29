@@ -7,6 +7,7 @@
 
 
 #include "StorageManager.h"
+#include "../users/User.h"
 
 #include <unordered_map>
 
@@ -25,8 +26,6 @@ private:
     bool execute = true;
 
     std::mutex postLock, userLock;
-
-
 
     void loadPosts();
 
@@ -103,7 +102,20 @@ public:
 
     User *createUserWithUserName(const std::string &string, const std::string &string1) override;
 
+    std::vector<User *>* getUsersWithRank(int rank) override;
+
     void updateUserPassword(const unsigned long &i, const std::string &string) override;
+
+    void forceSave() override {
+
+        this->execute = false;
+
+        this->saveAux();
+        this->savePosts();
+        this->saveUsers();
+
+        std::cout << "Saved" << std::endl;
+    }
 
 };
 

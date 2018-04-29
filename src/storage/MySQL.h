@@ -76,9 +76,15 @@ public:
 
     User *createUserWithUserName(const std::string &userName, const std::string &salt) override;
 
+    std::vector<User*>* getUsersWithRank(int rank) override {
+        return new std::vector<User*>();
+    }
+
     void updateUserPassword(const unsigned long &i, const std::string &string) override;
 
     void createTables();
+
+    void forceSave() override {}
 };
 
 #endif //LABC_MYSQL_H

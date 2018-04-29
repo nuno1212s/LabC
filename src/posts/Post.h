@@ -16,6 +16,8 @@ private:
 
     unsigned long postingUser, postID;
 
+    unsigned long postDate;
+
     std::string postTitle, postText;
 
     std::set<unsigned long> *subscribers;
@@ -25,7 +27,8 @@ private:
 public:
     Post(const unsigned long &parentPost, const unsigned long &postingUser, const unsigned long &postID,
          std::string postTitle, std::string postText = "")
-            : parentPost(parentPost), postingUser(postingUser), postID(postID) {
+            : parentPost(parentPost), postingUser(postingUser), postID(postID),
+              postDate((unsigned long) time(nullptr)) {
 
         this->subscribers = new std::set<unsigned long>();
         this->subPosts = new std::vector<Post *>();
@@ -36,10 +39,10 @@ public:
     }
 
     Post(const unsigned long &parentPost, const unsigned long &postingUser, const unsigned long &postID,
-         std::string postTitle, std::string postText, std::set<unsigned long> *subscribers,
-         std::vector<Post *> *subPosts)
+         const unsigned long &postDate, std::string postTitle, std::string postText
+            , std::set<unsigned long> *subscribers, std::vector<Post *> *subPosts)
             : parentPost(parentPost), postingUser(postingUser), postID(postID), subscribers(subscribers),
-              subPosts(subPosts) {
+              subPosts(subPosts), postDate(postDate) {
 
         this->postTitle = std::move(postTitle);
         this->postText = std::move(postText);
@@ -77,6 +80,10 @@ public:
 
     unsigned long getPostID() const {
         return postID;
+    }
+
+    unsigned long getPostDate() const {
+        return postDate;
     }
 
     const std::string &getPostTitle() const {
@@ -118,7 +125,7 @@ public:
 class PostBuilder {
 
 private:
-    unsigned long postID, postingUser, parentPost;
+    unsigned long postID, postingUser, parentPost, postDate;
 
     std::string postTitle, postText;
 
@@ -128,10 +135,11 @@ private:
 
 public:
     PostBuilder(const unsigned long &postID, const unsigned long &postingUser, const unsigned long &parentPost,
+                const unsigned long &postDate,
                 std::string postTitle, std::string postText, std::set<unsigned long> *subscribers,
                 std::set<unsigned long> *subPostsTemp)
             : postID(postID), postingUser(postingUser), parentPost(parentPost), subscribers(subscribers),
-              subPostsTemp(subPostsTemp) {
+              subPostsTemp(subPostsTemp), postDate(postDate) {
 
         this->subPosts = new std::vector<Post *>(subPostsTemp->size());
         this->postTitle = std::move(postTitle);
@@ -164,7 +172,7 @@ public:
         return this;
     }
 
-    Post *build(std::list<PostBuilder*> *posts) {
+    Post *build(std::list<PostBuilder *> *posts) {
 
         for (unsigned long postID : *subPostsTemp) {
 
@@ -180,11 +188,12 @@ public:
             }
         }
 
-        posts->remove_if([this](PostBuilder* post) -> bool {
-            return post->getPostID() == this->getPostID() || this->getSubPosts()->find(post->getPostID()) != this->subPostsTemp->end();
+        posts->remove_if([this](PostBuilder *post) -> bool {
+            return post->getPostID() == this->getPostID() ||
+                   this->getSubPosts()->find(post->getPostID()) != this->subPostsTemp->end();
         });
 
-        Post *p = new Post(parentPost, postingUser, postID, postTitle, postText, subscribers, subPosts);
+        Post *p = new Post(parentPost, postingUser, postID, postDate, postTitle, postText, subscribers, subPosts);
 
         return p;
     }

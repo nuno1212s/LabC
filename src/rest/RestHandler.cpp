@@ -92,6 +92,33 @@ void RestHandler::onRequest(const Pistache::Http::Request &request, Pistache::Ht
             //Cannot free user, stored in UserManager
             //delete user;
 
+        } else if (request.query().has("updateUser")) {
+
+            //Atualizar o nome e o contacto de um utilizador
+
+            unsigned long userID = j["UserID"];
+
+            std::string authKey = j["AuthKey"];
+
+            std::string name = j["Name"], contact = j["Contacto"];
+
+            User *user = Main::getUserManager()->getUser(userID);
+
+            if (!Main::getUserManager()->isAuthenticated(userID, authKey)) {
+
+                response.send(Http::Code::Bad_Request,  "User auth key not valid");
+
+                return;
+            }
+
+            if (user == nullptr) {
+                response.send(Http::Code::Bad_Request, "User with ID not found");
+                return;
+            }
+
+            user->setName(name);
+            user->setContactInfo(contact);
+
         } else if (request.query().has("updatePassword")) {
 
             std::string oldPassword = j["OldPassword"];

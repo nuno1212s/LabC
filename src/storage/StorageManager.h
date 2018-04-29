@@ -43,7 +43,11 @@ public:
 
     virtual User *createUserWithUserName(const std::string &, const std::string &) = 0;
 
+    virtual std::vector<User *>* getUsersWithRank(int rank) = 0;
+
     virtual void updateUserPassword(const unsigned long &, const std::string&) = 0;
+
+    virtual void forceSave() = 0;
 
 };
 

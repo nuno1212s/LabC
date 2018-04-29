@@ -3,6 +3,7 @@
 //
 
 #include <memory>
+#include <csignal>
 #include "posts/PostManager.h"
 #include "storage/StorageManager.h"
 #include "users/UserManager.h"
@@ -12,7 +13,24 @@
 #include "storage/JSON.h"
 #include "commandhandler/CommandHandler.h"
 
+void handleSignal(int sig) {
+
+    std::cout << "Forcing save" << std::endl;
+
+    Main::getStorageManager()->forceSave();
+
+    exit(EXIT_SUCCESS);
+
+}
+
 int main() {
+
+    signal(SIGINT, handleSignal);
+    signal(SIGTERM, handleSignal);
+
+#ifdef SIGBREAK
+    signal(SIGBREAK, handleSignal);
+#endif
 
     Main::instantiateStorage<JSON>();
 

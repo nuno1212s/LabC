@@ -13,6 +13,7 @@
 #include "base64.h"
 #include "../posts/Post.h"
 #include "../posts/PostManager.h"
+#include "../storage/StorageManager.h"
 
 #define EXIT_CODE (-1)
 
@@ -45,7 +46,6 @@ void initialMenu() {
     }
 
 }
-
 
 
 bool readAuth() {
@@ -89,13 +89,15 @@ std::string getHashedPassword(const std::string &password, const std::string &sa
 
     CryptoPP::SHA256 hash;
 
-    //Fazer hash da password juntamente com o salt para armazenamento seguro
+    //Fazer hash da  password juntamente com o salt para armazenamento seguro
     CryptoPP::StringSource foo(password + salt, true,
                                new CryptoPP::HashFilter(hash,
                                                         new CryptoPP::Base64Encoder(
                                                                 new CryptoPP::StringSink(digest))));
 
     std::cout << digest;
+
+    return digest;
 }
 
 void authenticatedMenu() {
@@ -121,6 +123,8 @@ void authenticatedMenu() {
             std::string topicTitle, description;
 
             std::cout << "Insert topic title" << std::endl;
+
+            std::getline(std::cin, topicTitle);
 
             std::getline(std::cin, topicTitle);
 
@@ -221,6 +225,8 @@ void manageTopics() {
 
             std::getline(std::cin, topicTitle);
 
+            std::getline(std::cin, topicTitle);
+
             Post *post = Main::getPostManager()->getPostWithTitle(topicTitle);
 
             if (post == nullptr) {
@@ -244,6 +250,8 @@ void manageTopics() {
             std::string topicTitle;
 
             std::cout << "Insert the topic title" << std::endl;
+
+            std::getline(std::cin, topicTitle);
 
             std::getline(std::cin, topicTitle);
 
@@ -278,7 +286,7 @@ void manageTopics() {
 
 void manageUsers() {
 
-    const short int ACCEPT_USERS = 1, DELETE_USERS = 2, CREATE_USER = 3;
+    const short int ACCEPT_USERS = 1, DELETE_USERS = 2, CREATE_USER = 3, MODIFY_USER = 4;
 
     short int opt = 0;
 
@@ -287,6 +295,7 @@ void manageUsers() {
         std::cout << ACCEPT_USERS << ") - Aceita utilizadores" << std::endl;
         std::cout << DELETE_USERS << ") - Apagar utilizadores" << std::endl;
         std::cout << CREATE_USER << ") - Criar utilizador" << std::endl;
+        std::cout << MODIFY_USER << ") - Modificar as permissões de um utilizador" << std::endl;
         std::cout << EXIT_CODE << ") Sair " << std::endl;
 
         std::cin >> opt;
@@ -297,24 +306,39 @@ void manageUsers() {
 
             auto users = Main::getUserManager()->getPendingUsers();
 
-            for (User *user : *users) {
+            if (users->empty()) {
 
-                std::cout << user->getUserName() << " . UserID: " << user->getUserID() << std::endl;
+                std::cout << "Não há utilizadores pendentes." << std::endl;
 
-                //Can't delete users as the user is stored in the JSON storage method
-                //TODO: Make JSON return copies of the object instead of the object itself so it can be safely freed
-                //delete user;
+                continue;
+
+            } else {
+                for (User *user : *users) {
+
+                    std::cout << user->getUserName() << " . UserID: " << user->getUserID() << std::endl;
+
+                    //Can't delete users as the user is stored in the JSON storage method
+                    //TODO: Make JSON return copies of the object instead of the object itself so it can be safely freed
+                    //delete user;
+                }
             }
 
             delete users;
 
-            std::cout << "Insira o ultilizador" << std::endl;
+            std::cout << "Insira o utilizador" << std::endl;
 
             std::string userName;
 
             std::cin >> userName;
 
             User *user = Main::getUserManager()->getUser(userName);
+
+            if (user == nullptr) {
+
+                std::cout << "Não existe nenhum utilizador com esse nome" << std::endl;
+
+                continue;
+            }
 
             user->setRank(UserRank::USER);
 
@@ -356,15 +380,64 @@ void manageUsers() {
 
             User *user = Main::getUserManager()->createUserWithUsername(userName);
 
-            user->setPassword(getHashedPassword(password, user->getSalt()));
+            if (user == nullptr) {
 
-            user->setRank(UserRank::USER);
+                std::cout << "Já existe um utilizador com esse username"<<std::endl;
+
+                continue;
+            }
+
+            Main::getStorageManager()->updateUserPassword(user->getUserID(), getHashedPassword(password, user->getSalt()));
+
+            user->setRank(UserRank::PENDING);
 
             std::cout << "Utilizador criado" << std::endl;
 
             //delete user
+        } else if (opt == MODIFY_USER) {
+
+            std::cout << "Insira o username do utilizador!" << std::endl;
+
+            std::string userName;
+
+            std::cin >> userName;
+
+            //Procurar pelo utilizador com o username dado
+            User *user = Main::getUserManager()->getUser(userName);
+
+            std::cout << "Insira o novo grupo" << std::endl;
+
+            //Inserir o grupo para que deseja mudar o utilizador
+            std::cout << "0 - Admin" << std::endl << "1 - Moderador" << std::endl << "2 - Utilizador" << std::endl
+                      << "3 - Pendente" << std::endl;
+
+            unsigned short int rank;
+
+            std::cin >> rank;
+
+            //Verificar se o rank está dentro dos limites aceitaveis
+            if (rank < 0 || rank > 3) {
+
+                std::cout << "O grupo não foi reconhecido!";
+
+                continue;
+            }
+
+            user->setRank(static_cast<UserRank> (rank));
+
+            std::cout << "O utilizador foi modificado com sucesso!" << std::endl;
+
+            //delete user
+
         }
 
     }
+
+}
+
+void viewStatistics() {
+
+    const short int VIEW_POST = 1;
+
 
 }
