@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <random>
 #include "../storage/StorageManager.h"
+#include "../posts/PostManager.h"
+#include "../posts/Post.h"
 #include "User.h"
 #include "UserManager.h"
 #include "../Main.h"
@@ -20,13 +22,20 @@ std::default_random_engine engine;
 
 std::uniform_int_distribution<int> distribution(0, max_index);
 
-auto randchar = []() -> char {
-    return charset[distribution(engine)];
+char (*randchar)() = []() -> char {
+    char c = charset[distribution(engine)];
+
+    if (c == 0) {
+        return randchar();
+    }
+
+    return c;
 };
 
 
 std::string random_string(size_t length) {
     std::string str(length, 0);
+
     std::generate_n(str.begin(), length, randchar);
     return str;
 }
@@ -41,6 +50,12 @@ std::string UserManager::generateSalt() {
 std::string UserManager::generateAccessKey(const unsigned long &userID) {
 
     std::string accessKey = random_string(64);
+
+
+    //Caso já exista uma chave de autenticação, elimina a chave de autenticação anterior e adiciona a nova
+    if (this->activeConnections.find(userID) != this->activeConnections.end()) {
+        this->activeConnections.erase(userID);
+    }
 
     this->activeConnections.emplace(userID, accessKey);
 
@@ -66,9 +81,9 @@ void UserManager::discardOfAccessKey(const unsigned long &userID) {
 
 User *UserManager::createUserWithUsername(const std::string &userName) {
 
-    User *user;
+    User *user = getUser(userName);
 
-    if ((user = getUser(userName)) != nullptr) {
+    if (user != nullptr) {
 
         return nullptr;
 
@@ -130,6 +145,37 @@ std::vector<User *> *UserManager::getPendingUsers() {
 
 void UserManager::deleteUser(const unsigned long &userID) {
 
+    //Remove the user's active sessions so that he can't do any further actions on the client
+    if (this->activeConnections.find(userID) != this->activeConnections.end()) {
+        this->activeConnections.erase(userID);
+    }
+
     Main::getStorageManager()->deleteUser(userID);
 
+}
+
+std::vector<Post *> *UserManager::postsInTheLastTime(User *user, unsigned long time) {
+
+    std::vector<Post *> *posts = new std::vector<Post *>();
+
+    for (unsigned long postID : *user->getCreatedPosts()) {
+
+        Post *post = Main::getPostManager()->getPost(postID);
+
+        if (post == nullptr) {
+            continue;
+        }
+
+        if (time_t(nullptr) - post->getPostDate() < time) {
+
+            posts->push_back(post);
+
+        }
+    }
+
+    return posts;
+}
+
+std::vector<User *> *UserManager::getAllUsers() {
+    return Main::getStorageManager()->getAllUsers();
 }

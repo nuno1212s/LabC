@@ -19,16 +19,18 @@ enum UserRank {
 class User {
 
 private:
+    //TODO: Add the last login to the user data
     unsigned long userID, creationDate;
 
     std::string userName, password, salt, contactInfo, name;
 
-    std::set<unsigned long> *subscribedTo, *createdPosts;
+    std::set<unsigned long> *subscribedTo, *createdPosts, *favourites;
 
     UserRank rank;
 
 public:
-    User(const unsigned long &userID, std::string userName, std::string password, std::string name, std::string salt, UserRank rank)
+    User(const unsigned long &userID, std::string userName, std::string password, std::string name, std::string salt,
+         UserRank rank)
             : userID(userID), rank(rank), creationDate((unsigned long) time(nullptr)), contactInfo("") {
         this->userName = std::move(userName);
         this->password = std::move(password);
@@ -37,9 +39,11 @@ public:
 
         this->subscribedTo = new std::set<unsigned long>();
         this->createdPosts = new std::set<unsigned long>();
+        this->favourites = new std::set<unsigned long>();
     }
 
-    User(const unsigned long &userID, std::string userName, std::string password, std::string name, std::string salt, UserRank rank,
+    User(const unsigned long &userID, std::string userName, std::string password, std::string name, std::string salt,
+         UserRank rank,
          std::set<unsigned long> *subscribedTo, std::set<unsigned long> *createdPosts, std::string contactInfo,
          const unsigned long &creationDate)
             : userID(userID), subscribedTo(subscribedTo), createdPosts(createdPosts), rank(rank),
@@ -115,13 +119,23 @@ public:
         return this->creationDate;
     }
 
-    void registerCreatedPost(unsigned long &postID);
+    void addFavouritePost(const unsigned long &postID) {
+        this->favourites->insert(postID);
+    }
 
-    void deletePost(unsigned long &postID);
+    void removeFavouritePost(const unsigned long &postID) {
+        if (this->favourites->find(postID) != this->favourites->end()) {
+            this->favourites->erase(postID);
+        }
+    }
 
-    bool subscribeTo(unsigned long &postID);
+    void registerCreatedPost(const unsigned long &postID);
 
-    bool unSubscribeTo(unsigned long &postID);
+    void deletePost(const unsigned long &postID);
+
+    bool subscribeTo(const unsigned long &postID);
+
+    bool unSubscribeTo(const unsigned long &postID);
 
     std::string toJSON();
 

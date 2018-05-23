@@ -3,19 +3,20 @@
 //
 
 #include <iostream>
-#include <string>
 #include "CommandHandler.h"
 #include "../users/UserManager.h"
 #include "../users/User.h"
 #include "../Main.h"
-#include "sha.h"
-#include "filters.h"
-#include "base64.h"
 #include "../posts/Post.h"
 #include "../posts/PostManager.h"
 #include "../storage/StorageManager.h"
+#include "sha.h"
+#include "filters.h"
+#include "base64.h"
 
 #define EXIT_CODE (-1)
+
+User *activeUser = nullptr;
 
 void initialMenu() {
 
@@ -27,6 +28,7 @@ void initialMenu() {
 
     while (opt != EXIT_CODE) {
         std::cout << LOGIN << ") Login / autenticação" << std::endl;
+        std::cout << EXIT_CODE << ") Sair " << std::endl;
 
         std::cin >> opt;
 
@@ -45,6 +47,15 @@ void initialMenu() {
 
     }
 
+    std::cout << "Tem a certeza que quer sair? Sem o servidor o cliente não irá funcionar" << std::endl;
+    std::cout << EXIT_CODE << ") Sair " << std::endl;
+    std::cin >> opt;
+
+    if (opt != EXIT_CODE) {
+
+        initialMenu();
+
+    }
 }
 
 
@@ -72,6 +83,7 @@ bool readAuth() {
                 return false;
             }
 
+            activeUser = user;
             return true;
         } else {
             std::cout << "Wrong password" << std::endl;
@@ -95,7 +107,7 @@ std::string getHashedPassword(const std::string &password, const std::string &sa
                                                         new CryptoPP::Base64Encoder(
                                                                 new CryptoPP::StringSink(digest))));
 
-    std::cout << digest;
+//    std::cout << digest;
 
     return digest;
 }
@@ -132,7 +144,7 @@ void authenticatedMenu() {
 
             std::getline(std::cin, description);
 
-            Post *p = Main::getPostManager()->createPost(topicTitle, 0, 0);
+            Post *p = Main::getPostManager()->createPost(topicTitle, activeUser->getUserID(), 0);
 
             if (p == nullptr) {
                 std::cout << "A topic with that name already exists!" << std::endl;
@@ -150,9 +162,15 @@ void authenticatedMenu() {
 
             management();
 
+        } else if (opt == STATISTICS) {
+            viewStats();
         }
 
     }
+
+    activeUser = nullptr;
+
+    initialMenu();
 
 }
 
@@ -362,8 +380,6 @@ void manageUsers() {
 
             Main::getUserManager()->deleteUser(user->getUserID());
 
-            delete user;
-
             std::cout << "You have deleted the user!" << std::endl;
 
         } else if (opt == CREATE_USER) {
@@ -382,12 +398,13 @@ void manageUsers() {
 
             if (user == nullptr) {
 
-                std::cout << "Já existe um utilizador com esse username"<<std::endl;
+                std::cout << "Já existe um utilizador com esse username" << std::endl;
 
                 continue;
             }
 
-            Main::getStorageManager()->updateUserPassword(user->getUserID(), getHashedPassword(password, user->getSalt()));
+            Main::getStorageManager()->updateUserPassword(user->getUserID(),
+                                                          getHashedPassword(password, user->getSalt()));
 
             user->setRank(UserRank::PENDING);
 
@@ -435,9 +452,572 @@ void manageUsers() {
 
 }
 
-void viewStatistics() {
+void viewStats() {
 
-    const short int VIEW_POST = 1;
+    const short VIEW_POST = 1;
+    const short VIEW_USER = 2;
+
+    std::cout << VIEW_POST << ") Ver estatisticas de posts" << std::endl;
+    std::cout << VIEW_USER << ") Ver estatisticas de utilizadores" << std::endl;
+    std::cout << "3) Voltar atrás" << std::endl;
+
+    int escolha = 0;
+
+    std::cout << "Faça a sua escolha" << std::endl;
+    std::cin >> escolha;
+
+    if (escolha == VIEW_POST) {
+
+        viewPostStats();
+
+    } else if (escolha == VIEW_USER) {
+
+        viewUserStats();
+
+    } else if (escolha == 3) {
+
+        authenticatedMenu();
+
+    }
+
+}
+
+void viewUserStats() {
+
+    const short POSTS_IN_THE_LAST = 1, ALL_TIME = 2;
+
+    std::cout << POSTS_IN_THE_LAST << ") Posts in the last time" << std::endl;
+    std::cout << ALL_TIME << ") All time user stats" << std::endl;
+    std::cout << EXIT_CODE << ") Sair " << std::endl;
+
+    int escolha = 0;
+
+    std::cin >> escolha;
+
+    if (escolha == POSTS_IN_THE_LAST) {
+        viewUserLastPosts();
+    } else if (escolha == ALL_TIME) {
+
+        viewUserAllTimeStats();
+    } else if (escolha == EXIT_CODE) {
+        viewStats();
+    }
+
+}
+
+void viewUserAllTimeStats() {
+
+    std::vector<User *> *users = Main::getUserManager()->getAllUsers();
+
+    User *user = requestUser(users, [](User *) -> bool {
+        return true;
+    });
+
+    if (user == nullptr) {
+        viewUserStats();
+
+        delete users;
+        return;
+    }
+
+    delete users;
+
+    std::cout << user->getUserName() << std::endl;
+    std::cout << "Nome:" << user->getName() << std::endl;
+    std::cout << "Contact: " << user->getContactInfo() << std::endl;
+    std::cout << "Posts criados:" << user->getCreatedPosts()->size() << std::endl;
+    std::cout << "Posts subscritos + likes: " << user->getSubscribedTo()->size() << std::endl;
+
+    std::cout << "1) Voltar atrás" << std::endl;
+    std::cin.get();
+
+    viewStats();
+}
+
+void viewUserLastPosts() {
+
+    std::vector<User *> *users = Main::getUserManager()->getAllUsers();
+
+    User *user = requestUser(users, [](User *) -> bool {
+        return true;
+    });
 
 
+    if (user == nullptr) {
+        viewUserStats();
+
+        delete users;
+        return;
+    }
+
+    delete users;
+
+    readTime:
+
+    system("clear");
+
+    std::cout << "1) 30 minutos" << std::endl;
+
+    std::cout << "2) 2 horas" << std::endl;
+
+    std::cout << "3) 12 horas" << std::endl;
+
+    std::cout << "4) 24 horas" << std::endl;
+
+    std::cout << "5) 7 dias" << std::endl;
+
+    std::cout << EXIT_CODE << ") Voltar atras" << std::endl;
+
+    unsigned long time;
+
+    int escolha = 0;
+
+    std::cin >> escolha;
+
+    switch (escolha) {
+
+        case 1:
+            time = 1800;
+            break;
+        case 2:
+            time = 7200;
+            break;
+        case 3:
+            time = 43200;
+            break;
+        case 4:
+            time = 86400;
+            break;
+        case 5:
+            time = 604800;
+            break;
+        default:
+            viewStats();
+            return;
+    }
+
+    std::vector<Post *> *posts = Main::getUserManager()->postsInTheLastTime(user, time);
+
+    if (posts->empty()) {
+
+        std::cout << "Este utilizador não tem posts" << std::endl;
+
+        delete posts;
+
+        goto readTime;
+
+    }
+
+    for (Post *post : *posts) {
+
+        time_t time = post->getPostDate();
+
+        std::cout << post->getPostTitle() << std::endl;
+        std::cout << "Data de criação: " << std::asctime(std::localtime(&time)) << std::endl << std::endl;
+
+    }
+
+    std::cout << "1) Voltar atrás" << std::endl;
+
+    std::cin.get();
+
+    delete posts;
+
+    goto readTime;
+}
+
+User *requestUser(std::vector<User *> *users, bool(*acceptFunc)(User *)) {
+
+    std::unordered_map<int, User *> usersNumber;
+
+    for (User *user : *users) {
+
+        if (acceptFunc(user)) {
+
+            std::cout << usersNumber.size() << ") " << user->getUserName() << std::endl;
+
+            usersNumber[usersNumber.size()] = user;
+
+        }
+
+    }
+
+    escolhaUser:
+
+    int escolha = 0;
+
+    std::cout << "-1) Voltar atrás" << std::endl;
+
+    std::cin >> escolha;
+
+    if (escolha == -1) {
+
+        return nullptr;
+
+    }
+
+    if (usersNumber.find(escolha) == usersNumber.end()) {
+        std::cout << "Esse utilizador não existe" << std::endl;
+
+        goto escolhaUser;
+    }
+
+    return usersNumber[escolha];
+}
+
+void viewPostStats() {
+
+    const short VIEW_ACTIVE = 1, MOST_USED = 2, POST_STATS = 3, USERS_INTERACTING_WITH = 4;
+
+    std::cout << VIEW_ACTIVE << ") Posts ativos" << std::endl;
+    std::cout << MOST_USED << ") Posts mais usados" << std::endl;
+    std::cout << POST_STATS << ") Estatitisticas de posts" << std::endl;
+    std::cout << USERS_INTERACTING_WITH << ") Utilizadores que interagiram com post" << std::endl;
+    std::cout << EXIT_CODE << ") Sair" << std::endl;
+
+    int escolha = 0;
+
+    std::cout << "Escolha uma das opções:" << std::endl;
+
+    std::cin >> escolha;
+
+    if (escolha == VIEW_ACTIVE) {
+
+        activePosts();
+
+    } else if (escolha == MOST_USED) {
+
+        mostUsedPosts();
+
+    } else if (escolha == POST_STATS) {
+
+        postStats();
+
+    } else if (escolha == USERS_INTERACTING_WITH) {
+        usersInteractingWithPost();
+    } else if (escolha == EXIT_CODE) {
+
+        authenticatedMenu();
+
+    }
+}
+
+void usersInteractingWithPost() {
+
+    readTime:
+
+    system("clear");
+
+    std::cout << "1) 30 minutos" << std::endl;
+
+    std::cout << "2) 2 horas" << std::endl;
+
+    std::cout << "3) 12 horas" << std::endl;
+
+    std::cout << "4) 24 horas" << std::endl;
+
+    std::cout << "5) 7 dias" << std::endl;
+
+    std::cout << EXIT_CODE << ") Voltar atras" << std::endl;
+
+    unsigned long time;
+
+    int escolha = 0;
+
+    std::cin >> escolha;
+
+    switch (escolha) {
+
+        case 1:
+            time = 1800;
+            break;
+        case 2:
+            time = 7200;
+            break;
+        case 3:
+            time = 43200;
+            break;
+        case 4:
+            time = 86400;
+            break;
+        case 5:
+            time = 604800;
+            break;
+        default:
+            viewStats();
+            return;
+    }
+
+    std::vector<Post *> *posts = Main::getStorageManager()->getAllPosts();
+
+    Post *p = getPostChoice(posts, [](Post *p) -> bool {
+        return true;
+    });
+
+    if (p == nullptr) {
+
+        delete posts;
+
+        goto readTime;
+    }
+
+    for (Post *post : *(p->getSubPosts())) {
+
+        if (time_t(nullptr) - post->getPostDate() < time) {
+            std::cout << post->getPostTitle() << std::endl;
+
+            //Não há necessidade de libertar a memória pois o utilizador está guardado no storage manager
+            std::cout << "Criador: " << Main::getUserManager()->getUser(post->getPostingUser())->getName() << std::endl;
+        }
+
+    }
+
+    delete posts;
+
+    std::cout << "1) Voltar atrás" << std::endl;
+    std::cin.get();
+
+    goto readTime;
+
+}
+
+void activePosts() {
+
+    readTime:
+
+    system("clear");
+
+    std::cout << "1) 30 minutos" << std::endl;
+
+    std::cout << "2) 2 horas" << std::endl;
+
+    std::cout << "3) 12 horas" << std::endl;
+
+    std::cout << "4) 24 horas" << std::endl;
+
+    std::cout << "5) 7 dias" << std::endl;
+
+    std::cout << EXIT_CODE << ") Voltar atras" << std::endl;
+
+    unsigned long time;
+
+    int escolha = 0;
+
+    std::cin >> escolha;
+
+    switch (escolha) {
+
+        case 1:
+            time = 1800;
+            break;
+        case 2:
+            time = 7200;
+            break;
+        case 3:
+            time = 43200;
+            break;
+        case 4:
+            time = 86400;
+            break;
+        case 5:
+            time = 604800;
+            break;
+        default:
+            viewStats();
+            return;
+    }
+
+    std::vector<Post *> *posts = Main::getStorageManager()->getAllPosts();
+
+    Post *p = getPostChoice(posts, [](Post *p) -> bool {
+        return true;
+    });
+
+    if (p == nullptr) {
+
+        delete posts;
+
+        goto readTime;
+    }
+
+    std::unordered_map<Post *, int> postsAtivos;
+
+    for (Post *post : *p->getSubPosts()) {
+
+        unsigned int postsInTheLastTime = post->postsInTheLastAmountOfTime(time);
+
+        if (postsInTheLastTime > 0) {
+
+            postsAtivos.emplace(post, postsInTheLastTime);
+
+        }
+
+    }
+
+    std::for_each(postsAtivos.begin(), postsAtivos.end(), [](std::pair<Post *, int> pair) -> void {
+
+        std::cout << pair.first->getPostTitle() << std::endl;
+        std::cout << "Posts in the last specified time: " << pair.second << std::endl;
+        std::cout << std::endl;
+    });
+
+    std::cout << "1) Voltar atrás" << std::endl;
+
+    delete posts;
+
+    goto readTime;
+
+}
+
+void postStats() {
+
+    system("clear");
+
+    std::vector<Post *> *posts = Main::getStorageManager()->getAllPosts();
+
+    Post *p = getPostChoice(posts, [](Post *p) -> bool {
+        return true;
+    });
+
+    std::cout << "Post:" << std::endl << p->getPostTitle() << std::endl << p->getPostText() << std::endl;
+
+    time_t time = p->getPostDate();
+
+    std::cout << "Data de criação:" << std::asctime(std::localtime(&time)) << std::endl;
+    std::cout << "Sub-comentários: " << p->getSubPosts()->size() << std::endl;
+    std::cout << "Likes: " << p->getSubscribers()->size() << std::endl;
+
+    std::cout << "1) Voltar atrás" << std::endl;
+    std::cin.get();
+
+    delete posts;
+
+    viewStats();
+}
+
+void mostUsedPosts() {
+
+    readTime:
+
+    system("clear");
+
+    std::cout << "1) 30 minutos" << std::endl;
+
+    std::cout << "2) 2 horas" << std::endl;
+
+    std::cout << "3) 12 horas" << std::endl;
+
+    std::cout << "4) 24 horas" << std::endl;
+
+    std::cout << "5) 7 dias" << std::endl;
+
+    std::cout << EXIT_CODE << ") Voltar atras" << std::endl;
+
+    unsigned long time;
+
+    int escolha = 0;
+
+    std::cin >> escolha;
+
+    switch (escolha) {
+
+        case 1:
+            time = 1800;
+            break;
+        case 2:
+            time = 7200;
+            break;
+        case 3:
+            time = 43200;
+            break;
+        case 4:
+            time = 86400;
+            break;
+        case 5:
+            time = 604800;
+            break;
+        default:
+            viewStats();
+            return;
+    }
+
+    std::vector<Post *> *posts = Main::getPostManager()->getMostActiveTopics(10, time);
+
+    for (Post *post : *posts) {
+
+        std::cout << post->getPostTitle() << std::endl;
+        std::cout << "Posts recentes: " << post->postsInTheLastAmountOfTime(time) << std::endl;
+
+    }
+
+    delete posts;
+
+    std::cout << "1) Voltar atrás" << std::endl;
+    std::cin.get();
+
+    goto readTime;
+}
+
+
+Post *getPostChoice(std::vector<Post *> *postData, bool (*acceptMethod)(Post *p)) {
+
+    std::cout << "Posts: " << std::endl;
+
+    std::unordered_map<int, Post *> topicos;
+
+    int current = 0;
+
+    for (Post *post : *postData) {
+        if (acceptMethod(post)) {
+
+            std::cout << current << ") " << post->getPostTitle() << std::endl;
+
+            topicos[current++] = post;
+
+        }
+    }
+
+    explorarTopico:
+
+    std::cout << "-1) Explorar topico" << std::endl;
+    std::cout << "-2) Voltar atrás" << std::endl;
+
+    std::cin >> current;
+
+    if (current == -1) {
+
+        escolherTopicoExplorar:
+
+        std::cout << "Escolha o topico" << std::endl;
+        std::cin >> current;
+
+        if (topicos.find(current) == topicos.end()) {
+
+            std::cout << "Esse topico não existe" << std::endl;
+
+            goto escolherTopicoExplorar;
+        }
+
+        Post *toReturn = getPostChoice(topicos[current]->getSubPosts(), acceptMethod);
+
+        //Voltar a esta pagina caso a escolha da ultima tenha sido voltar atrás
+        if (toReturn == nullptr) {
+            toReturn = getPostChoice(postData, acceptMethod);
+        }
+
+        return toReturn;
+    } else if (current == -2) {
+
+        return nullptr;
+
+    }
+
+    if (topicos.find(current) == topicos.end()) {
+
+        std::cout << "Esse topico não existe" << std::endl;
+
+        goto explorarTopico;
+    }
+
+    return topicos[current];
 }

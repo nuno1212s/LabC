@@ -12,16 +12,22 @@
 
 #include "../users/User.h"
 #include "../posts/Post.h"
+#include "../Main.h"
+#include "../users/UserManager.h"
+#include "../commandhandler/CommandHandler.h"
 
 std::vector<Post *> *JSON::getAllPosts() {
 
-    std::vector<Post *> *posts = new std::vector<Post *>(this->posts.size());
+    std::vector<Post *> *posts = new std::vector<Post *>();
 
     for (auto post = this->posts.begin(); post != this->posts.end(); post++) {
 
         posts->push_back(post->second);
 
     }
+
+//    std::cout << posts->size() << " " << this->posts.size() << std::endl;
+
 
     return posts;
 }
@@ -47,6 +53,14 @@ std::vector<Post *> *JSON::getAllPostsWithParent(const unsigned long &parentID) 
 }
 
 Post *JSON::getPostWithID(const unsigned long &postID) {
+
+    //If the post is not a main post
+
+    if (this->posts.find(postID) == this->posts.end()) {
+
+
+    }
+
     return this->posts[postID];
 }
 
@@ -55,7 +69,7 @@ Post *JSON::createPostWithTitle(const std::string &postTitle, const unsigned lon
 
     Post *post = new Post(parentPost, postingUser, nextPostID(), postTitle, "");
 
-    this->posts[post->getPostID()] = post;
+    posts[post->getPostID()] = post;
 
     return post;
 }
@@ -148,6 +162,13 @@ void JSON::loadUsers() {
     if (!fileStream.is_open()) {
         std::cout << "File does not exist" << std::endl;
 
+        User *user = createUserWithUserName("admin", Main::getUserManager()->generateSalt());
+
+        user->setRank(ADMIN);
+        user->setPassword(getHashedPassword("test", user->getSalt()));
+        user->setName("Admin");
+        user->setContactInfo("Admin");
+
         return;
     }
 
@@ -181,7 +202,8 @@ void JSON::loadUsers() {
 
         unsigned int rank = userJSON["Rank"];
 
-        User *user = new User(userID, userName, password, name, salt, static_cast<UserRank>(rank), subscribed, createdPosts, contact, creationDate);
+        User *user = new User(userID, userName, password, name, salt, static_cast<UserRank>(rank), subscribed,
+                              createdPosts, contact, creationDate);
 
         this->users.emplace(user->getUserID(), user);
     }
@@ -270,8 +292,6 @@ void JSON::loadPosts() {
 
         Post *p = loadPost(*iterator);
 
-        this->posts.emplace(p->getPostID(), p);
-
     }
 
     postLock.unlock();
@@ -296,13 +316,20 @@ void JSON::savePosts() {
 
         Post *post = iterator->second;
 
-        j.push_back(savePost(post));
+        if (post == nullptr) {
+            continue;
+        }
+
+        if (post->isMainPost()) {
+            j.push_back(savePost(post));
+            //Only save the main posts as the rest of the posts are stored as sub posts to those
+        }
 
     }
 
     this->postLock.unlock();
 
-    fileStream << j.dump(3);
+    fileStream << j.dump(2);
 
     fileStream.flush();
     fileStream.close();
@@ -310,7 +337,7 @@ void JSON::savePosts() {
 
 nlohmann::json savePost(Post *post) {
 
-    nlohmann::json postJSON = {};
+    nlohmann::json postJSON = nlohmann::json::object();
 
     postJSON["PostID"] = post->getPostID();
     postJSON["ParentPost"] = post->getParentPost();
@@ -318,17 +345,19 @@ nlohmann::json savePost(Post *post) {
     postJSON["PostTitle"] = post->getPostTitle();
     postJSON["PostText"] = post->getPostText();
     postJSON["PostDate"] = post->getPostDate();
+    postJSON["MaxSubPosts"] = post->getMaxSubPosts();
+
 
     nlohmann::json subPosts = nlohmann::json::array(),
             subscribers = nlohmann::json::array();
 
-    for (Post *p : *post->getSubPosts()) {
+    for (Post *p : *(post->getSubPosts())) {
 
         subPosts.push_back(savePost(p));
 
     }
 
-    for (unsigned long subscriber : *post->getSubscribers()) {
+    for (unsigned long subscriber : *(post->getSubscribers())) {
 
         subscribers.push_back(subscriber);
 
@@ -340,15 +369,22 @@ nlohmann::json savePost(Post *post) {
     return postJSON;
 }
 
-Post *loadPost(nlohmann::json j) {
+Post *JSON::loadPost(nlohmann::json j) {
 
     unsigned long postID = j["PostID"], parentPost = j["ParentPost"], postingUser = j["PostingUser"], postDate = j["PostDate"];
+
+    unsigned int maxSubPosts = 50;
+
+    if (j.find("MaxSubPosts") != j.end()) {
+        maxSubPosts = j["MaxSubPosts"];
+    }
 
     std::string postTitle = j["PostTitle"], postText = j["PostText"];
 
     nlohmann::json subPost = j["SubPosts"], subscribers = j["Subscribers"];
 
-    Post *p = new Post(parentPost, postingUser, postID, postDate, postTitle, postText, new std::set<unsigned long>(), new std::vector<Post*>(subPost.size()));
+    Post *p = new Post(parentPost, postingUser, postID, postDate, postTitle, postText, new std::set<unsigned long>(),
+                       new std::vector<Post *>(), maxSubPosts);
 
     for (auto post = subPost.begin(); post != subPost.end(); post++) {
 
@@ -361,6 +397,9 @@ Post *loadPost(nlohmann::json j) {
         p->addSubscriber(*subscriber);
 
     }
+
+    //Save the post in the post map
+    this->posts.emplace(postID, p);
 
     return p;
 }
@@ -414,7 +453,7 @@ void JSON::saveAux() {
 
 std::vector<User *> *JSON::getUsersWithRank(int rank) {
 
-    std::vector<User*>* users = new std::vector<User*>();
+    std::vector<User *> *users = new std::vector<User *>();
 
     for (auto user = this->users.begin(); user != this->users.end(); user++) {
 
@@ -423,6 +462,17 @@ std::vector<User *> *JSON::getUsersWithRank(int rank) {
             users->push_back(user->second);
 
         }
+
+    }
+    return users;
+}
+
+std::vector<User *> *JSON::getAllUsers() {
+    std::vector<User *> *users = new std::vector<User *>();
+
+    for (auto user = this->users.begin(); user != this->users.end(); user++) {
+
+        users->push_back(user->second);
 
     }
 

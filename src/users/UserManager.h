@@ -32,6 +32,8 @@ public:
 
     std::vector<User*> *getPendingUsers();
 
+    std::vector<User *> *getAllUsers();
+
     void deleteUser(const unsigned long&);
 
     std::string generateAccessKey(const unsigned long&);
@@ -43,6 +45,15 @@ public:
     bool isAuthenticated(const unsigned long &userID, const std::string &accessKey);
 
     void discardOfAccessKey(const unsigned long &userID);
+
+    /**
+     * Posts created by user in the last X amount of seconds
+     * @param user
+     * @param time
+     * @return
+     */
+    std::vector<Post *> *postsInTheLastTime(User *user, unsigned long time);
+
 };
 
 

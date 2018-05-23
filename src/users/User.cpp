@@ -9,7 +9,7 @@
 
 #define MAX_SUBSCRIBED 30
 
-bool User::subscribeTo(unsigned long &postID) {
+bool User::subscribeTo(const unsigned long &postID) {
 
     unsigned long size = this->subscribedTo->size();
 
@@ -21,19 +21,19 @@ bool User::subscribeTo(unsigned long &postID) {
 
 }
 
-bool User::unSubscribeTo(unsigned long &postID) {
+bool User::unSubscribeTo(const unsigned long &postID) {
 
     this->subscribedTo->erase(postID);
 
 }
 
-void User::registerCreatedPost(unsigned long &postID) {
+void User::registerCreatedPost(const unsigned long &postID) {
 
     this->createdPosts->insert(postID);
 
 }
 
-void User::deletePost(unsigned long &postID) {
+void User::deletePost(const unsigned long &postID) {
 
     this->createdPosts->erase(postID);
 

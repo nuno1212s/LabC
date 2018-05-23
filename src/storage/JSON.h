@@ -10,6 +10,7 @@
 #include "../users/User.h"
 
 #include <unordered_map>
+#include <json.hpp>
 
 class JSON : public StorageManager {
 
@@ -38,6 +39,8 @@ private:
     void loadAux();
 
     void saveAux();
+
+    Post *loadPost(nlohmann::json j);
 
     unsigned long nextPostID() {
 
@@ -100,9 +103,17 @@ public:
 
     User *getUserByUsername(const std::string &userName) override;
 
-    User *createUserWithUserName(const std::string &string, const std::string &string1) override;
+    /**
+     * Cria um utilizador com o username e com  o salt dados
+     * @param string
+     * @param string1
+     * @return
+     */
+    User *createUserWithUserName(const std::string &username, const std::string &salt) override;
 
     std::vector<User *>* getUsersWithRank(int rank) override;
+
+    std::vector<User *>* getAllUsers() override;
 
     void updateUserPassword(const unsigned long &i, const std::string &string) override;
 

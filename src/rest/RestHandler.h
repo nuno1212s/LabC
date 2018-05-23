@@ -29,6 +29,8 @@ public:
 
         opts.threads(10);
 
+        opts.flags(Pistache::Tcp::Options::ReuseAddr);
+
         server.init(opts);
 
     }
@@ -36,7 +38,6 @@ public:
     ~RestHandler() {
 
         server.shutdown();
-
 
     }
 

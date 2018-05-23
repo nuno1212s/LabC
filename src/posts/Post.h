@@ -20,15 +20,19 @@ private:
 
     std::string postTitle, postText;
 
+    //Guarda os subscritores caso o Post seja um topico e os likes caso seja um post ou um comentário
     std::set<unsigned long> *subscribers;
 
+    //Guarda todos os posts que estao abaixo deste
     std::vector<Post *> *subPosts;
+
+    unsigned int maxSubPosts;
 
 public:
     Post(const unsigned long &parentPost, const unsigned long &postingUser, const unsigned long &postID,
          std::string postTitle, std::string postText = "")
             : parentPost(parentPost), postingUser(postingUser), postID(postID),
-              postDate((unsigned long) time(nullptr)) {
+              postDate((unsigned long) time(nullptr)), maxSubPosts(50) {
 
         this->subscribers = new std::set<unsigned long>();
         this->subPosts = new std::vector<Post *>();
@@ -40,9 +44,9 @@ public:
 
     Post(const unsigned long &parentPost, const unsigned long &postingUser, const unsigned long &postID,
          const unsigned long &postDate, std::string postTitle, std::string postText
-            , std::set<unsigned long> *subscribers, std::vector<Post *> *subPosts)
+            , std::set<unsigned long> *subscribers, std::vector<Post *> *subPosts, unsigned int maxSubPosts = 50)
             : parentPost(parentPost), postingUser(postingUser), postID(postID), subscribers(subscribers),
-              subPosts(subPosts), postDate(postDate) {
+              subPosts(subPosts), postDate(postDate), maxSubPosts(maxSubPosts) {
 
         this->postTitle = std::move(postTitle);
         this->postText = std::move(postText);
@@ -104,9 +108,15 @@ public:
         return subPosts;
     }
 
-    void addSubPost(Post *p) {
-        this->subPosts->push_back(p);
+    unsigned int getMaxSubPosts() const {
+        return maxSubPosts;
     }
+
+    void setMaxSubPosts(unsigned int posts) {
+        this->maxSubPosts = posts;
+    }
+
+    void addSubPost(Post *p);
 
     void removeSubPost(Post *post);
 
@@ -117,6 +127,10 @@ public:
     void addSubscriber(const unsigned long &);
 
     bool removeSubscriber(const unsigned long &);
+
+    unsigned int postsInTheLastAmountOfTime(const unsigned long &);
+
+    void sortPosts();
 
     std::string toJSON() const;
 
@@ -141,7 +155,7 @@ public:
             : postID(postID), postingUser(postingUser), parentPost(parentPost), subscribers(subscribers),
               subPostsTemp(subPostsTemp), postDate(postDate) {
 
-        this->subPosts = new std::vector<Post *>(subPostsTemp->size());
+        this->subPosts = new std::vector<Post *>();
         this->postTitle = std::move(postTitle);
         this->postText = std::move(postText);
 

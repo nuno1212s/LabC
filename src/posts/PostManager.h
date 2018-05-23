@@ -32,10 +32,27 @@ public:
 
     std::vector<Post*>* loadFeedForUser(const unsigned long &userID);
 
+    std::vector<Post*>* loadUnsubscribedTopicsForUser(const unsigned long &userID);
+
     std::vector<Post*>* loadPostsOfUser(const unsigned long &userID);
+
+    std::vector<Post *>* getMostActiveTopics(unsigned int amount, unsigned long time);
+
+    std::vector<Post *> * getPostsInTheLastTime(Post *post, unsigned long time);
 
     std::vector<Post *>* getTopics();
 
+    /**
+     * Handles a user subscribing to a post
+     *
+     * Auto adds the post to the users subscribed to list
+     *
+     * @param postID
+     * @param userID
+     */
+    void subscribeToPost(const unsigned long &postID, const unsigned long &userID);
+
+    unsigned int postsInTheLastTime(Post *post, unsigned long time);
 };
 
 #endif //LABC_POSTMANAGER_H

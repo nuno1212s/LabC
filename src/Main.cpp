@@ -9,15 +9,18 @@
 #include "users/UserManager.h"
 #include "rest/RestHandler.h"
 #include "Main.h"
-#include "storage/MySQL.h"
 #include "storage/JSON.h"
 #include "commandhandler/CommandHandler.h"
+
+std::shared_ptr<RestHandler> restHandler;
 
 void handleSignal(int sig) {
 
     std::cout << "Forcing save" << std::endl;
 
     Main::getStorageManager()->forceSave();
+
+    delete restHandler.get();
 
     exit(EXIT_SUCCESS);
 
@@ -36,6 +39,8 @@ int main() {
 
     std::shared_ptr<RestHandler> pointer = std::make_shared<RestHandler>();
 
+    restHandler = pointer;
+
     std::thread restThread(&RestHandler::start, pointer);
 
     restThread.detach();
@@ -48,6 +53,7 @@ PostManager *Main::postManager = nullptr;
 StorageManager *Main::storageManager = nullptr;
 
 UserManager *Main::userManager = nullptr;
+
 
 PostManager *Main::getPostManager() {
 

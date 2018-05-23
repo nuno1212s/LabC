@@ -8,11 +8,28 @@
 #include "../Main.h"
 #include "Post.h"
 
+void Post::addSubPost(Post *p) {
+
+    this->subPosts->push_back(p);
+
+    if (this->subPosts->size() > maxSubPosts) {
+
+        //Make sure the most recent posts are first
+        this->sortPosts();
+
+        while (this->subPosts->size() > maxSubPosts) {
+            this->subPosts->pop_back();
+        }
+    }
+
+}
+
 void Post::removeSubPost(Post *post) {
 
     for (auto iterator = this->subPosts->begin(); iterator < this->subPosts->end(); iterator++) {
         if ((*iterator)->getPostID() == post->getPostID()) {
             this->subPosts->erase(iterator);
+
             break;
         }
     }
@@ -78,6 +95,8 @@ std::string Post::toJSON() const {
     j["PostingUser"] = this->getPostingUser();
     j["Title"] = this->getPostTitle();
     j["Text"] = this->getPostText();
+    j["CreationDate"] = this->postDate;
+    j["Creator"] = this->postingUser;
 
     json subscribers = json::array(), posts = json::array();
 
@@ -89,7 +108,7 @@ std::string Post::toJSON() const {
 
     std::for_each(this->subPosts->begin(), this->subPosts->end(), [&posts](const Post *p) -> void {
 
-        posts.push_back(p->getPostID());
+        posts.push_back(p->toJSON());
 
     });
 
@@ -104,4 +123,37 @@ void Post::setPostText(std::string postText) {
     Main::getStorageManager()->updatePostText(getPostID(), postText);
 
     this->postText = std::move(postText);
+}
+
+unsigned int Post::postsInTheLastAmountOfTime(const unsigned long &amountOfTime) {
+
+    unsigned int postsInTheLast24Hrs = 0;
+
+    unsigned long currentTime = (unsigned long) time(nullptr);
+
+    if (currentTime - this->postDate < amountOfTime) {
+        postsInTheLast24Hrs++;
+    }
+
+    std::for_each(this->subPosts->begin(), this->subPosts->end(), [&postsInTheLast24Hrs, amountOfTime](Post *post) -> void {
+
+        postsInTheLast24Hrs += post->postsInTheLastAmountOfTime(amountOfTime);
+
+    });
+
+    return postsInTheLast24Hrs;
+}
+
+void Post::sortPosts() {
+
+    std::vector<Post *> *subPosts = this->subPosts;
+
+    std::sort(subPosts->begin(), subPosts->end(), [](Post *p, Post *p2) -> bool {
+        return p->getPostDate() > p2->getPostDate();
+    });
+
+    std::for_each(subPosts->begin(), subPosts->end(), [](Post *post) -> void {
+        post->sortPosts();
+    });
+
 }
